@@ -170,7 +170,7 @@ struct TCPClient {
         #endif
     }
 };
-
+#ifndef _WIN32
 struct UDPServer {
     int socket;
     sockaddr_in address, cliaddr;
@@ -318,3 +318,4 @@ struct UDPClient {
         #endif
     }
 };
+#endif

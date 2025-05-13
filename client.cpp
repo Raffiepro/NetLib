@@ -4,9 +4,15 @@
 
 int main()
 {
-    TCPClient c("127.0.0.1", 8080);
+    UDPClient c("127.0.0.1", 8080);
 
-    std::string input;
+    while(true) {
+        std::string i;
+        std::getline(std::cin, i);
+        c.send(i.c_str(), i.size());
+    }
+
+    /*std::string input;
     char buffer[1024] = { 0 };
     while(true) {
         std::getline(std::cin, input);
@@ -15,7 +21,7 @@ int main()
 
         std::cout<<c.recv(buffer, sizeof(buffer))<<'\n';
         std::cout << buffer << std::endl;
-    }
+    }*/
 
     c.stop();
     return 0;

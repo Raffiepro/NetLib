@@ -21,7 +21,6 @@ int main()
         }
     }
 
-    //std::cout<<std::hex<<buff<<'\n';
     /*std::string input;
     char buffer[1024] = { 0 };
     while(true) {

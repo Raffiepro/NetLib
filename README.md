@@ -1,7 +1,6 @@
 # NetLib C++
 The coolest networking library for _c++_
 ### Currently supports server/client for TCP/UDP - Unix and Windows support
-### _UDP Support not yet added for Windows_
 # Examples
 Basic TCP
 _Server_
@@ -18,7 +17,7 @@ int main()
     char buffer[1024] = { 0 };
     memset(buffer,0,1024);
     
-    std::cout<<s.recv(0, buffer, sizeof(buffer))<<'\n'; //PRINTS SIZE
+    std::cout<<s.recv(0, buffer, sizeof(buffer))<<'\n'; //PRINT SIZE
     std::cout << buffer << std::endl; //PRINT RECIEVED DATA
 
     s.stop();

@@ -4,8 +4,8 @@
 
 int main()
 {
-    TCPServer s(8080);
-    s.accept();
+    UDPServer s(8080);
+    //s.accept();
 
     char buffer[1024] = { 0 };
     memset(buffer,0,1024);

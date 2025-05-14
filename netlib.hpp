@@ -11,7 +11,18 @@
 #include <iphlpapi.h>
 #include <stdint.h>
 #include <iostream>
+
 static bool startedWsa=false;
+static void startWSA() {
+    if(!startedWsa) {
+        WSADATA wsaData;
+        int result = WSAStartup(MAKEWORD(2,2), &wsaData);
+        if (result != 0) {
+            std::cerr << "WSAStartup failed with error: " << result << std::endl;
+            exit(EXIT_FAILURE);
+        }
+    }
+}
 
 #else
 
@@ -55,11 +66,7 @@ struct TCPServer {
     }
     void start(uint16_t port) {
         #ifdef _WIN32
-        if(!startedWsa) {
-            WSADATA wsaData;
-            WSAStartup(MAKEWORD(2,2), &wsaData);
-        }
-        std::cout<<"Started WSA\n";
+        startWSA();
         #endif
         socket = ::socket(AF_INET, SOCK_STREAM, 0);
         address.sin_family = AF_INET;
@@ -121,22 +128,18 @@ struct TCPClient {
     }
     void start(const char* ip, uint16_t port) {
         #ifdef _WIN32
-        if(!startedWsa) {
-            WSADATA wsaData;
-            WSAStartup(MAKEWORD(2,2), &wsaData);
-        }
-        std::cout<<"Started WSA\n";
+        startWSA();
         #endif
         socket = ::socket(AF_INET, SOCK_STREAM, 0);
         if (socket < 0) {
-            perror("socket");
+            printf("socket error");
             exit(EXIT_FAILURE);
         }
 
         address.sin_family = AF_INET;
         address.sin_port = htons(port);
         if (inet_pton(AF_INET, ip, &address.sin_addr) <= 0) {
-            perror("inet_pton");
+            printf("inet_pton error");
             #ifdef _WIN32
             closesocket(socket);
             #else
@@ -170,7 +173,7 @@ struct TCPClient {
         #endif
     }
 };
-#ifndef _WIN32
+
 struct UDPServer {
     int socket;
     sockaddr_in address, cliaddr;
@@ -197,11 +200,7 @@ struct UDPServer {
     }
     void start(uint16_t port) {
         #ifdef _WIN32
-        if(!startedWsa) {
-            WSADATA wsaData;
-            WSAStartup(MAKEWORD(2,2), &wsaData);
-        }
-        std::cout<<"Started WSA\n";
+        startWSA();
         #endif
         socket = ::socket(AF_INET, SOCK_DGRAM, 0);
         memset(&address, 0, sizeof(address));
@@ -214,7 +213,10 @@ struct UDPServer {
     }
     inline ssize_t recv(size_t client, void* buff, size_t n) {
         #ifdef _WIN32
-        return ::recv(clients[client], (char*)buff, n, 0);
+        socklen_t len = sizeof(cliaddr);
+        return recvfrom(socket,(char*)buff,n,
+                0, ( struct sockaddr *) &cliaddr,
+                &len);
         #else
         socklen_t len = sizeof(cliaddr);
 
@@ -225,12 +227,15 @@ struct UDPServer {
     }
     inline void send(size_t client, const void* buff, size_t n) {
         #ifdef _WIN32
-        ::send(clients[client], (const char*)buff, n, 0);
+        socklen_t len = sizeof(cliaddr);
+        sendto(socket, (const char*)buff, n,
+            0, (const struct sockaddr *) &cliaddr,
+                len);
         #else
         socklen_t len = sizeof(cliaddr);
         sendto(socket, (const void *)buff, n,
-		MSG_CONFIRM, (const struct sockaddr *) &cliaddr,
-			len);
+            MSG_CONFIRM, (const struct sockaddr *) &cliaddr,
+                len);
         #endif
     }
     inline void stop() {
@@ -267,22 +272,18 @@ struct UDPClient {
     }
     void start(const char* ip, uint16_t port) {
         #ifdef _WIN32
-        if(!startedWsa) {
-            WSADATA wsaData;
-            WSAStartup(MAKEWORD(2,2), &wsaData);
-        }
-        std::cout<<"Started WSA\n";
+        startWSA();
         #endif
         socket = ::socket(AF_INET, SOCK_DGRAM, 0);
         if (socket < 0) {
-            perror("socket");
+            printf("socket error");
             exit(EXIT_FAILURE);
         }
 
         address.sin_family = AF_INET;
         address.sin_port = htons(port);
         if (inet_pton(AF_INET, ip, &address.sin_addr) <= 0) {
-            perror("inet_pton");
+            printf("inet_pton error");
             #ifdef _WIN32
             closesocket(socket);
             #else
@@ -292,10 +293,12 @@ struct UDPClient {
         }
     }
     inline ssize_t recv(void* buff, size_t n) const {
-        #ifdef _WIN32
-        return ::recv(socket, (char*)buff, n, 0);
-        #else
         socklen_t len = sizeof(address);
+        #ifdef _WIN32
+        return recvfrom(socket, (char*)buff, n, 
+				0, (struct sockaddr *) &address, 
+				&len);
+        #else
         return recvfrom(socket, buff, n, 
 				MSG_WAITALL, (struct sockaddr *) &address, 
 				&len);
@@ -303,7 +306,9 @@ struct UDPClient {
     }
     inline void send(const void* buff, size_t n) const {
         #ifdef _WIN32
-        ::send(socket, (char*)buff, n, 0);
+        sendto(socket, (const char*)buff, n, 
+		0, (const struct sockaddr *) &address, 
+			sizeof(address));
         #else
         sendto(socket, buff, n, 
 		MSG_CONFIRM, (const struct sockaddr *) &address, 
@@ -318,4 +323,3 @@ struct UDPClient {
         #endif
     }
 };
-#endif

@@ -1,5 +1,7 @@
 # NetLib C++
-The coolest networking library for _c++_
+The coolest networking library for _C++_
+<br>
+Simply include the [netlib.hpp](netlib.hpp) file :)
 ### Currently supports server/client for TCP/UDP - Unix and Windows support
 # Examples
 Basic TCP

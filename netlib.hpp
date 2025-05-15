@@ -10,7 +10,7 @@
 #include <ws2tcpip.h>
 #include <iphlpapi.h>
 #include <stdint.h>
-#include <iostream>
+#include <stdio.h>
 
 static bool startedWsa=false;
 static void startWSA() {
@@ -18,7 +18,7 @@ static void startWSA() {
         WSADATA wsaData;
         int result = WSAStartup(MAKEWORD(2,2), &wsaData);
         if (result != 0) {
-            std::cerr << "WSAStartup failed with error: " << result << std::endl;
+            printf("WSAStartup failed with error: %i",result);
             exit(EXIT_FAILURE);
         }
     }
@@ -176,7 +176,7 @@ struct TCPClient {
 
 struct UDPServer {
     int socket;
-    sockaddr_in address, cliaddr;
+    sockaddr_in address;
     
     inline UDPServer(uint16_t port) {
         start(port);
@@ -204,37 +204,32 @@ struct UDPServer {
         #endif
         socket = ::socket(AF_INET, SOCK_DGRAM, 0);
         memset(&address, 0, sizeof(address));
-        memset(&cliaddr, 0, sizeof(cliaddr));
         address.sin_family = AF_INET;
         address.sin_port = htons(port);
         address.sin_addr.s_addr = INADDR_ANY;
         bind(socket, (struct sockaddr*)&address,
             sizeof(address));
     }
-    inline ssize_t recv(size_t client, void* buff, size_t n) {
+    inline ssize_t recv(sockaddr_in* client, void* buff, size_t n) {
+        socklen_t len = sizeof(sockaddr_in);
         #ifdef _WIN32
-        socklen_t len = sizeof(cliaddr);
         return recvfrom(socket,(char*)buff,n,
-                0, ( struct sockaddr *) &cliaddr,
+                0, ( struct sockaddr *) client,
                 &len);
         #else
-        socklen_t len = sizeof(cliaddr);
-
-        return recvfrom(socket, (char *)buff, n,
-				MSG_WAITALL, ( struct sockaddr *) &cliaddr,
-				&len);
+        return recvfrom(socket,(char*)buff,n,
+                MSG_WAITALL, ( struct sockaddr *) client,
+                &len);
         #endif
     }
-    inline void send(size_t client, const void* buff, size_t n) {
+    inline void send(sockaddr_in* client, const void* buff, size_t n) {
         #ifdef _WIN32
-        socklen_t len = sizeof(cliaddr);
         sendto(socket, (const char*)buff, n,
-            0, (const struct sockaddr *) &cliaddr,
-                len);
+            0, (const struct sockaddr *) client,
+                sizeof(sockaddr));
         #else
-        socklen_t len = sizeof(cliaddr);
         sendto(socket, (const void *)buff, n,
-            MSG_CONFIRM, (const struct sockaddr *) &cliaddr,
+            MSG_CONFIRM, (const struct sockaddr *) client,
                 len);
         #endif
     }

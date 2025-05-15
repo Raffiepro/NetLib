@@ -8,10 +8,18 @@ int main()
     //s.accept();
 
     char buffer[1024] = { 0 };
-    memset(buffer,0,1024);
-    
-    std::cout<<s.recv(0, buffer, sizeof(buffer))<<'\n'; //PRINTS SIZE
-    std::cout << buffer << std::endl; //PRINT RECIEVED DATA
+
+    sockaddr_in client;
+    while(true) {
+        memset(buffer,0,1024);
+
+        size_t rs = s.recv(&client, buffer, sizeof(buffer));
+
+        std::cout << rs << '\n'; //PRINTS SIZE
+        std::cout << buffer << std::endl; //PRINT RECIEVED DATA
+
+        s.send(&client, buffer, rs); //ECHO
+    }
 
     s.stop();
     return 0;

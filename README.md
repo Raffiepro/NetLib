@@ -6,7 +6,8 @@ Simply include the [netlib.hpp](netlib.hpp) file :)
 [![Build](https://github.com/Raffiepro/NetLib/actions/workflows/c-cpp.yml/badge.svg)](https://github.com/Raffiepro/NetLib/actions/workflows/c-cpp.yml)
 ### Currently supports server/client for TCP/UDP - Unix and Windows support
 # Examples
-Basic TCP
+Basic TCP (No need to stop the netlib processes before ending the program, I just do it to demonstrate that it exists :] )
+<br>
 _Server_
 ```c++
 #include "netlib.hpp"

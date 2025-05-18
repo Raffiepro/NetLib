@@ -2,6 +2,8 @@
 The coolest networking library for _C++_
 <br>
 Simply include the [netlib.hpp](netlib.hpp) file :)
+<br><br>
+[![Build](https://github.com/Raffiepro/NetLib/actions/workflows/c-cpp.yml/badge.svg)](https://github.com/Raffiepro/NetLib/actions/workflows/c-cpp.yml)
 ### Currently supports server/client for TCP/UDP - Unix and Windows support
 # Examples
 Basic TCP

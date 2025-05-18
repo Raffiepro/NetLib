@@ -230,7 +230,7 @@ struct UDPServer {
         #else
         sendto(socket, (const void *)buff, n,
             MSG_CONFIRM, (const struct sockaddr *) client,
-                len);
+                sizeof(sockaddr));
         #endif
     }
     inline void stop() {

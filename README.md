@@ -1,6 +1,8 @@
 # NetLib C++
 The coolest networking library for _C++_
-<br>
+<br><br>
+100% Complete and working.. I think... If you see a bug then create an issue. I doubt there are any bugs.
+<br><br>
 Simply include the [netlib.hpp](netlib.hpp) file :)
 <br><br>
 [![Build](https://github.com/Raffiepro/NetLib/actions/workflows/c-cpp.yml/badge.svg)](https://github.com/Raffiepro/NetLib/actions/workflows/c-cpp.yml)

@@ -1,4 +1,4 @@
-# NetLib C++
+# Mininet for C++
 The coolest networking library for _C++_
 <br><br>
 100% Complete and working.. I think... If you see a bug then create an issue. I doubt there are any bugs.

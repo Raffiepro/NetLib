@@ -3,16 +3,16 @@ The coolest networking library for _C++_
 <br><br>
 100% Complete and working.. I think... If you see a bug then create an issue. I doubt there are any bugs.
 <br><br>
-Simply include the [netlib.hpp](netlib.hpp) file :)
+Simply include the [mininet.hpp](mininet.hpp) file :)
 <br><br>
-[![Build](https://github.com/Raffiepro/NetLib/actions/workflows/c-cpp.yml/badge.svg)](https://github.com/Raffiepro/NetLib/actions/workflows/c-cpp.yml)
+[![Build](https://github.com/Raffiepro/mininet/actions/workflows/c-cpp.yml/badge.svg)](https://github.com/Raffiepro/mininet/actions/workflows/c-cpp.yml)
 ### Currently supports server/client for TCP/UDP - Unix and Windows support
 # Examples
-Basic TCP (No need to stop the netlib processes before ending the program, I just do it to demonstrate that it exists :] )
+Basic TCP (No need to stop the mininet processes before ending the program, I just do it to demonstrate that it exists :] )
 <br>
 _Server_
 ```c++
-#include "netlib.hpp"
+#include "mininet.hpp"
 #include <iostream>
 #include <string.h>
 
@@ -33,7 +33,7 @@ int main()
 ```
 _Client_
 ```c++
-  #include "netlib.hpp"
+  #include "mininet.hpp"
 
   int main()
   {

@@ -37,6 +37,7 @@ static void startWSA() {
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
+#include <iostream>
 #include <vector>
 
 struct TCPServer {
